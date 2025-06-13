@@ -89,6 +89,17 @@ const getMovieById = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, movie, "Movie retrieved successfully"));
 });
 
+const getAllMovies = asyncHandler(async (req, res) => {
+    const movies = await Movie.find().sort({ createdAt: -1 }); // Most recent first
+
+    if (movies.length === 0) {
+        throw new ApiError(404, "No movies found");
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, movies, "All movies retrieved successfully"));
+});
 
 // Update movie
 const updateMovie = asyncHandler(async (req, res) => {
@@ -220,5 +231,6 @@ export {
     updateMovie,
     deleteMovie,
     getMoviesByGenre,
+    getAllMovies,
     getMoviesByLanguage
 };
