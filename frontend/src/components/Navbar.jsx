@@ -43,7 +43,7 @@ const Navbar = ({ searchTerm, setSearchTerm }) => {
         </div>
         
         <nav className="space-x-6 flex items-center">
-          <Link to="/add-movie" className="text-[#B08968] hover:text-[#DDB892] font-medium">
+          <Link to="/addmovie" className="text-[#B08968] hover:text-[#DDB892] font-medium">
             Add Movies
           </Link>
           

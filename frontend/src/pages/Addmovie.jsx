@@ -2,21 +2,15 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const genres = [
-  "All",
-  "Action",
-  "Adventure",
-  "Animation",
-  "Comedy",
-  "Drama",
-  "Family",
-  "History",
-  "Romance",
-  "Sci-Fi",
-  "Sport",
-  "Other",
+  "All", "Action", "Adventure", "Animation", "Comedy",
+  "Drama", "Family", "History", "Romance", "Sci-Fi",
+  "Sport", "Other"
 ];
+
+const availabilityOptions = ["","In Theatres","Prime","Netflix","Jio Hotstar","Apple TV","Other Platform", "Online", "Coming Soon"];
 
 const Addmovie = () => {
   const navigate = useNavigate();
@@ -24,15 +18,16 @@ const Addmovie = () => {
   const [form, setForm] = useState({
     title: "",
     description: "",
-    poster: null, // file
+    poster: null,
     genre: "",
     duration: "",
     language: "",
-    availability: "",
+    availability: ""
   });
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleFileChange = (e) => {
     setForm({ ...form, poster: e.target.files[0] });
@@ -42,13 +37,9 @@ const Addmovie = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("title", form.title);
-    formData.append("description", form.description);
-    formData.append("genre", form.genre);
-    formData.append("duration", form.duration);
-    formData.append("language", form.language);
-    formData.append("availability", form.availability);
-    formData.append("poster", form.poster);
+    Object.entries(form).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
 
     try {
       await axios.post(
@@ -60,11 +51,10 @@ const Addmovie = () => {
           },
         }
       );
-
       alert("Movie added successfully!");
       navigate("/Home");
     } catch (err) {
-      const message = err.res?.data?.message || "Failed to add movie";
+      const message = err?.response?.data?.message || "Failed to add movie";
       alert(message);
     }
   };
@@ -72,129 +62,116 @@ const Addmovie = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen flex items-center justify-center p-4 bg-[#D4A373]">
+      <div className="min-h-screen bg-[#EDE0D4] flex items-center justify-center py-10 px-4">
         <form
           onSubmit={handleSubmit}
-          className="max-w-md w-full p-10 rounded-2xl shadow-2xl backdrop-blur-sm border border-[#CCD5AE] border-opacity-20 bg-gradient-to-br from-[#E9EDC9] to-[#FEFAE0]"
+          className="w-full max-w-3xl bg-white/70 rounded-2xl shadow-2xl p-8 md:p-10 space-y-6 border border-[#DDB892]"
         >
-          <div className="space-y-4">
-            {/* Title */}
-            <div className="relative mb-4">
-              <i className="fa-solid fa-film absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400"></i>
+          <h2 className="text-3xl font-bold text-[#7F5539] mb-4">Add New Movie</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-[#7F5539] font-medium mb-2">Title</label>
               <input
-                onChange={handleChange}
-                value={form.title}
-                required
                 type="text"
                 name="title"
-                placeholder="Movie title"
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-white bg-opacity-90 border-2 border-[#CCD5AE] focus:outline-none focus:ring-2 focus:ring-[#FAEDCD] transition-all"
-              />
-            </div>
-
-            {/* Description */}
-            <div className="relative mb-4">
-              <i className="fa-solid fa-quote-right absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400"></i>
-              <input
+                value={form.title}
                 onChange={handleChange}
-                value={form.description}
+                className="w-full px-4 py-3 rounded-lg border border-[#DDB892] bg-[#E6CCB2]/40 focus:ring-2 focus:ring-[#B08968] focus:border-transparent"
                 required
-                type="text"
-                name="description"
-                placeholder="Movie description"
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-white bg-opacity-90 border-2 border-[#CCD5AE] focus:outline-none focus:ring-2 focus:ring-[#FAEDCD] transition-all"
               />
             </div>
 
-            {/* Poster */}
-            <div className="relative mb-4">
-              <i className="fa-solid fa-photo-film absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400"></i>
-              <input
-                onChange={handleFileChange}
+            <div>
+              <label className="block text-[#7F5539] font-medium mb-2">Genre</label>
+              <select
+                name="genre"
+                value={form.genre}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-[#DDB892] bg-[#E6CCB2]/40 focus:ring-2 focus:ring-[#B08968] focus:border-transparent"
                 required
+              >
+                {genres.map((genre) => (
+                  <option key={genre} value={genre}>{genre}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[#7F5539] font-medium mb-2">Duration (minutes)</label>
+              <input
+                type="number"
+                name="duration"
+                value={form.duration}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-[#DDB892] bg-[#E6CCB2]/40 focus:ring-2 focus:ring-[#B08968] focus:border-transparent"
+                required
+                min="1"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[#7F5539] font-medium mb-2">Language</label>
+              <input
+                type="text"
+                name="language"
+                value={form.language}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-[#DDB892] bg-[#E6CCB2]/40 focus:ring-2 focus:ring-[#B08968] focus:border-transparent"
+                required
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-[#7F5539] font-medium mb-2">Availability</label>
+              <select
+                name="availability"
+                value={form.availability}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-[#DDB892] bg-[#E6CCB2]/40 focus:ring-2 focus:ring-[#B08968] focus:border-transparent"
+                required
+              >
+                {availabilityOptions.map((option) => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-[#7F5539] font-medium mb-2">Description</label>
+              <textarea
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                rows="4"
+                className="w-full px-4 py-3 rounded-lg border border-[#DDB892] bg-[#E6CCB2]/40 focus:ring-2 focus:ring-[#B08968] focus:border-transparent resize-none"
+                required
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-[#7F5539] font-medium mb-2">Upload Poster</label>
+              <input
                 type="file"
                 name="poster"
                 accept="image/*"
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-white bg-opacity-90 border-2 border-[#CCD5AE] focus:outline-none focus:ring-2 focus:ring-[#FAEDCD] transition-all"
-              />
-            </div>
-
-            {/* Duration */}
-            <div className="relative mb-4">
-              <i className="fa-solid fa-clock absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400"></i>
-              <input
-                onChange={handleChange}
-                value={form.duration}
+                onChange={handleFileChange}
+                className="w-full px-4 py-3 rounded-lg border border-[#DDB892] bg-[#E6CCB2]/40 focus:ring-2 focus:ring-[#B08968] focus:border-transparent"
                 required
-                type="text"
-                name="duration"
-                placeholder="Movie duration (in minutes)"
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-white bg-opacity-90 border-2 border-[#CCD5AE] focus:outline-none focus:ring-2 focus:ring-[#FAEDCD] transition-all"
               />
-            </div>
-
-            {/* Language */}
-            <div className="relative mb-4">
-              <i className="fa-solid fa-language absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400"></i>
-              <input
-                onChange={handleChange}
-                value={form.language}
-                required
-                type="text"
-                name="language"
-                placeholder="Movie language"
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-white bg-opacity-90 border-2 border-[#CCD5AE] focus:outline-none focus:ring-2 focus:ring-[#FAEDCD] transition-all"
-              />
-            </div>
-
-            {/* Availability */}
-            <div className="relative mb-4">
-              <i className="fa-solid fa-square-check absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400"></i>
-              <input
-                onChange={handleChange}
-                value={form.availability}
-                required
-                type="text"
-                name="availability"
-                placeholder="Movie availability"
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-white bg-opacity-90 border-2 border-[#CCD5AE] focus:outline-none focus:ring-2 focus:ring-[#FAEDCD] transition-all"
-              />
-            </div>
-
-            {/* Genre */}
-            <div className="relative mb-4">
-              <label
-                htmlFor="genre"
-                className="mr-2 font-medium text-[#9C6644]"
-              >
-                Genre:
-              </label>
-              <select
-                id="genre"
-                name="genre"
-                onChange={handleChange}
-                value={form.genre}
-                required
-                className="bg-[#E6CCB2] border border-[#B08968] text-[#7F5539] font-medium px-4 py-2 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-[#DDB892]"
-              >
-                {genres.map((genre) => (
-                  <option key={genre} value={genre}>
-                    {genre}
-                  </option>
-                ))}
-              </select>
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full mt-6 py-3 rounded-lg font-semibold text-white bg-[#D4A373] hover:bg-[#FAEDCD] hover:text-[#D4A373] transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2 shadow-lg"
+            className="w-full mt-4 bg-gradient-to-r from-[#B08968] to-[#9C6644] text-white font-semibold py-3 rounded-xl hover:from-[#9C6644] hover:to-[#7F5539] transition-all duration-300 shadow-lg flex items-center justify-center gap-2"
           >
-            <i className="fa-solid fa-clapperboard"></i>
-            <span>Add Movie</span>
+            <i className="fas fa-plus"></i>
+            Add Movie
           </button>
         </form>
       </div>
+      <Footer />
     </>
   );
 };
