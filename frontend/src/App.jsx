@@ -10,7 +10,7 @@ import User from './pages/User';
 
 import MovieDetail from './pages/MovieDetail ';
 import LogoutDisplay from './pages/LogoutDisplay'
-import Profile from './pages/Profile';
+
 
 function App() {
   const isAuthenticated = !!getToken();
@@ -30,7 +30,6 @@ function App() {
         {/* Movie Detail */}
           <Route path="/movie/:id" element={<MovieDetail />} />
 
-          <Route path="/profile" element={<Profile />} />
         <Route path="/logout-display" element={<LogoutDisplay />} />
         
        </Routes>

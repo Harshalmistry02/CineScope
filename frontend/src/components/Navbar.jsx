@@ -51,9 +51,7 @@ const Navbar = ({ searchTerm, setSearchTerm }) => {
             Reviews
           </Link>
          
-          <Link to="/profile" className="text-[#B08968] hover:text-[#DDB892] font-medium">
-            Profile
-          </Link>
+         
          
           <button
             onClick={handleLogout}
