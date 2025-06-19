@@ -1,4 +1,4 @@
-<h1 align="center">Hi 👋, I'm Harshal Misrt</h1>
+<h1 align="center">Hi 👋, I'm Harshal Mistry</h1>
 <h3 align="center">A passionate MERN stack developer from India</h3>
 
 - 🔭 I’m currently working on [CineScope](https://github.com/Harshalmistry02/CineScope)
